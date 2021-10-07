@@ -1,0 +1,44 @@
+#include <iostream>
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include <iostream>
+#include<stdio.h>
+using namespace cv;
+using namespace std; 
+int main(int argc, char** argv )
+{
+Mat img, img2, img3, img4, img5, img6, img7, img8, img9, img10, img11, img12, img13, img14, img15; 
+std::string image_path = samples::findFile("../C1.jpeg");
+std::string image_path2 = samples::findFile("../C2.jpeg");
+img = imread(image_path, IMREAD_COLOR);
+img2 = imread(image_path2, IMREAD_COLOR);
+cv::cvtColor(img, img4, cv::COLOR_RGB2GRAY, 0); 
+cv::cvtColor(img, img5, cv::COLOR_RGB2HSV, 0); 
+cv::cvtColor(img, img6, cv::COLOR_RGB2YUV, 0); 
+cv::cvtColor(img, img7, cv::COLOR_RGB2Lab, 0); 
+cv::cvtColor(img, img8, cv::COLOR_RGB2HLS, 0); 
+cv::cvtColor(img, img9, cv::COLOR_RGB2YCrCb , 0); 
+cv::cvtColor(img2, img10, cv::COLOR_RGB2GRAY, 0); 
+cv::cvtColor(img2, img11, cv::COLOR_RGB2HSV, 0); 
+cv::cvtColor(img2, img12, cv::COLOR_RGB2YUV, 0); 
+cv::cvtColor(img2, img13, cv::COLOR_RGB2Lab, 0); 
+cv::cvtColor(img2, img14, cv::COLOR_RGB2HLS, 0); 
+cv::cvtColor(img2, img15, cv::COLOR_RGB2YCrCb , 0); 
+cv::imshow("C1", img);
+cv::imshow("C2", img2);
+cv::imshow("C1 GRIS", img4);
+cv::imshow("C1 HSV", img5);
+cv::imshow("C1 YUV", img6);
+cv::imshow("C1 Lab", img7);
+cv::imshow("C1 HLS", img8);
+cv::imshow("C1 YCrCB", img9);
+cv::imshow("C2 GRIS", img10);
+cv::imshow("C2 HSV", img11);
+cv::imshow("C2 YUV", img12);
+cv::imshow("C2 Lab", img13);
+cv::imshow("C2 HLS", img14);
+cv::imshow("C2 YCrCB", img15);
+cv::waitKey(0);
+
+return 0;
+} 

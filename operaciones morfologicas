@@ -1,0 +1,60 @@
+#include <iostream>
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include <iostream>
+#include<stdio.h>
+using namespace cv;
+using namespace std; 
+
+
+Mat kernel, kernel2, img, dst, dst2;
+
+int main()
+{
+std::string image_path = samples::findFile("../ROS2.png");
+img = imread(image_path, IMREAD_COLOR);
+
+/* kernel = cv::getStructuringElement(MORPH_ELLIPSE, Size(5, 5)); 
+cv::morphologyEx(img, dst, MORPH_OPEN, kernel); 
+cv::imshow("Ruido", img);
+cv::imshow("Apertura", dst); */
+
+kernel = cv::getStructuringElement(MORPH_RECT, Size(5, 5)); 
+cv::morphologyEx(img, dst, MORPH_CLOSE, kernel); 
+/* cv::imshow("Ruido", img);
+cv::imshow("Cierre", dst); */
+
+/* kernel2 = cv::getStructuringElement(MORPH_ELLIPSE, Size(5, 5)); 
+cv::erode(img, dst2, kernel2); 
+cv::imshow("Original", img);
+cv::imshow("Erosion", dst2); */
+
+/* kernel2 = cv::getStructuringElement(MORPH_ELLIPSE, Size(5, 5)); 
+cv::dilate(img, dst2, kernel2); 
+cv::imshow("Original", img);
+cv::imshow("Dilatacion", dst2); */
+
+//Apertura
+
+/* kernel2 = cv::getStructuringElement(MORPH_ELLIPSE, Size(5, 5)); 
+cv::erode(img, dst2, kernel2); 
+cv::dilate(dst2, dst2, kernel2); 
+
+cv::imshow("Original", img);
+cv::imshow("Apertura Morfo", dst); 
+cv::imshow("Apertura", dst2); */
+
+//Cierre
+
+kernel2 = cv::getStructuringElement(MORPH_ELLIPSE, Size(5, 5)); 
+cv::dilate(img, dst2, kernel2); 
+cv::erode(dst2, dst2, kernel2); 
+
+
+cv::imshow("Original", img);
+cv::imshow("Cierre Morfo", dst); 
+cv::imshow("Cierre", dst2);
+
+cv::waitKey(0); 
+return 0; 
+}

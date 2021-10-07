@@ -1,0 +1,42 @@
+#include <iostream>
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include <iostream>
+#include<stdio.h>
+using namespace cv;
+using namespace std; 
+void CallBackFunc(int event, int x, int y, int flags, void* userdata)
+{ 
+if ( event == EVENT_LBUTTONDOWN ) 
+{
+cout << "Boton izquierdo presionado - posición (" << x << ", " << y << ")" << endl;
+} 
+else if ( event == EVENT_RBUTTONDOWN )
+{
+cout << "Boton derecho presionado - posición (" << x << ", " << y << ")" << endl;
+} 
+else if ( event == EVENT_MBUTTONDOWN )
+{
+cout << "Boton enmedio presionado - posición (" << x << ", " << y << ")" << endl;
+} 
+else if ( event == EVENT_MOUSEMOVE )
+{
+cout << "Mouse sobre la ventana- posición (" << x << ", " << y << ")" << endl;
+
+}
+
+}
+int main () 
+{
+Mat img;
+std::string image_path = samples::findFile("../jupiter.png");
+img = imread(image_path, IMREAD_COLOR);
+char ch = 0; 
+while (ch != 'q' && ch != 'Q'){ 
+namedWindow("Original"); 
+setMouseCallback("Original", CallBackFunc, NULL); 
+cv::imshow("Original", img);
+ch = cv::waitKey(0); 
+}
+return 0;
+}
