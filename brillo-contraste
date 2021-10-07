@@ -1,0 +1,32 @@
+#include <iostream>
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include <iostream>
+#include<stdio.h>
+using namespace cv; 
+// using namespace std; 
+
+const int slider_max = 255; 
+Mat img, dst;
+
+int main ()
+{
+int iSliderValor1 = 50;
+int iSliderValor2 = 50;
+char ch = 0; 
+std::string image_path = samples::findFile("../C1.jpeg");
+img = imread(image_path, IMREAD_COLOR);
+namedWindow("Control", cv::WINDOW_AUTOSIZE); 
+createTrackbar("Brillo", "Control", &iSliderValor1, 255); 
+createTrackbar("Contraste", "Control", &iSliderValor2, 255); 
+while (ch != 'q' && ch != 'Q'){
+namedWindow("Original");
+imshow("Original", img); 
+int Brillo = iSliderValor1-50 ; 
+double Contraste = iSliderValor2/50 ; 
+img.convertTo(dst, -1, Contraste, Brillo); 
+imshow("Brillo/contraste", dst); 
+ch = cv::waitKey(3); 
+}
+
+}
