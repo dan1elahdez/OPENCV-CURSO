@@ -1,0 +1,23 @@
+#include <iostream>
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include <iostream>
+#include<stdio.h>
+using namespace cv;
+using namespace std; 
+
+
+Mat kernel, kernel2, img, dst, dst2;
+
+int main()
+{
+std::string image_path = samples::findFile("../canvas.png");
+img = imread(image_path, IMREAD_COLOR);
+cv::Canny(img, dst, 10, 300, 3, false); 
+cv::imshow("Original", img);
+cv::imshow("Filtro", dst);
+
+
+cv::waitKey(0); 
+return 0; 
+}
