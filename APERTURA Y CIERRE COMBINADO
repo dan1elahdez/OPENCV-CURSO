@@ -1,0 +1,36 @@
+#include <iostream>
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include <iostream>
+#include<stdio.h>
+using namespace cv;
+using namespace std; 
+
+
+Mat kernel, kernel2, img, dst, dst2, dst3, dst4;
+
+int main()
+{
+std::string image_path = samples::findFile("../combinadout.jpg");
+img = imread(image_path, IMREAD_COLOR);
+
+kernel = cv::getStructuringElement(MORPH_ELLIPSE, Size(5, 5)); 
+cv::morphologyEx(img, dst, MORPH_OPEN, kernel); 
+cv::morphologyEx(dst, dst2, MORPH_CLOSE, kernel); 
+cv::imshow("Original", img);
+cv::imshow("Apertura", dst2); 
+
+//Apertura y cierre  a pasos
+
+kernel2 = cv::getStructuringElement(MORPH_ELLIPSE, Size(5, 5)); 
+cv::erode(img, dst3, kernel2); 
+cv::dilate(dst3, dst3, kernel2); 
+kernel2 = cv::getStructuringElement(MORPH_ELLIPSE, Size(5, 5)); 
+cv::dilate(dst3, dst3, kernel2); 
+cv::erode(dst3, dst3, kernel2); 
+
+cv::imshow("Cierre", dst3);
+
+cv::waitKey(0); 
+return 0; 
+}
