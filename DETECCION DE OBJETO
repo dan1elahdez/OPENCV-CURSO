@@ -1,0 +1,119 @@
+#include <iostream>
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include <iostream>
+#include<stdio.h>
+using namespace cv;
+using namespace std;
+
+int bajo_H = 170;
+int alto_H = 255;
+
+int bajo_S = 150;
+int alto_S = 255;
+
+int bajo_V = 60;
+int alto_V = 255; 
+
+int main( int argc, char** argv )
+{
+VideoCapture cap(0); //usb webcam 0 es la camara de tu laptop
+
+if ( !cap.isOpened() ) 
+{
+cout << "Error al abrir cámara web " << endl;
+return -1;
+}
+
+namedWindow("Control", cv::WINDOW_AUTOSIZE); //crea una ventana llamada "Control"
+
+createTrackbar("Bajo_H", "Control", &bajo_H, 179); //Hue (0 - 179)
+createTrackbar("Alto_H", "Control", &alto_H, 179);
+
+createTrackbar("Bajo_S", "Control", &bajo_S, 255); //Saturation (0 - 255)
+createTrackbar("Alto_S", "Control", &alto_S, 255);
+
+createTrackbar("Bajo_V", "Control", &bajo_V, 255);//Value (0 - 255)
+createTrackbar("Alto_V", "Control", &alto_V, 255); 
+
+//Captura una imagen temporalmente de la camara
+Mat imgTmp;
+cap.read(imgTmp);
+
+Mat Circulo;
+Mat imgOriginal;
+
+for(;;)
+{
+
+Circulo = Mat::zeros(imgTmp.size(), CV_8UC3); 
+bool bSuccess = cap.read(imgOriginal); // lee un nuevo cuadro del video
+
+if (!bSuccess) 
+{
+cout << "Cannot read a frame from video stream" << endl;
+break;
+} 
+
+Mat imgHSV; 
+
+cvtColor(imgOriginal, imgHSV, COLOR_BGR2HSV); // convierte el frame capturado de BGR a HSV 
+Mat imgBinaria; 
+inRange(imgHSV, Scalar(bajo_H, bajo_S, bajo_V), Scalar(alto_H, alto_S, alto_V), imgBinaria); 
+// OPERACIONES MOFORLOGICAS 
+
+//Apertura
+// erode(imgBinaria, imgBinaria, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)) );
+// dilate(imgBinaria, imgBinaria, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)) );
+morphologyEx(imgBinaria, imgBinaria, MORPH_OPEN, getStructuringElement(MORPH_RECT, Size(5, 5)) ); 
+
+//Cierre
+// dilate( imgBinaria, imgBinaria, getStructuringElement(MORPH_RECT, Size(5, 5)) );
+// erode(imgBinaria, imgBinaria, getStructuringElement(MORPH_RECT, Size(5, 5)) );
+morphologyEx(imgBinaria, imgBinaria, MORPH_CLOSE, getStructuringElement(MORPH_RECT, Size(5, 5)) );
+
+// Calcula los momentos de la imagen con umbral binarizada
+Moments oMoments = moments(imgBinaria);
+
+double dM01 = oMoments.m01;
+double dM10 = oMoments.m10;
+double dArea = oMoments.m00; 
+
+if (dArea > 10000)
+{
+//calcula la posicion del circulo
+int posX = dM10 / dArea;
+int posY = dM01 / dArea;
+
+Point Centro_Circulo;
+Centro_Circulo=Point(posX,posY);
+
+int Radio;
+Scalar Color;
+int Grosor;
+
+Radio=30;
+Color=CV_RGB(255,0,0);
+Grosor=4;
+
+circle(Circulo,Centro_Circulo,Radio,Color,Grosor,0,0);
+} 
+
+Mat result;
+imgOriginal.copyTo(result,imgBinaria);
+imshow("Imagen Binaria", imgBinaria); // muestra imagen binaria
+imgOriginal = imgOriginal + Circulo;
+imshow("Camara", imgOriginal); //muestra imagen de la camara + circulo
+imshow("resultado", result); //muestra el resultado del procesamiento de imágenes
+
+if (waitKey(30)) 
+{ }
+}
+
+
+return 0;
+} 
+
+
+
+
